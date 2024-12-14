@@ -46,31 +46,42 @@ jobs:
 
   deploy:
     runs-on: ubuntu-latest
-    needs: build-and-test
+    needs: build
+    if: github.ref == 'refs/heads/main'
+
     steps:
-      - name: Checkout repository
+      # Клонирование исходного кода
+      - name: Checkout source code
         uses: actions/checkout@v3
 
-      - name: Deploy to remote server
-        uses: appleboy/ssh-action@v0.1.7
-        with:
-          host: ${{ secrets.SSH_HOST }}
-          username: ${{ secrets.SSH_USERNAME }}
-          password: ${{ secrets.SSH_PASSWORD }}
-          script: |
-            echo "Starting deployment..."
-            mkdir -p ~/deployments/url-shortener
-            rm -rf ~/deployments/url-shortener/*
-            rsync -av --exclude="deployments" /github/workspace/ ~/deployments/url-shortener/
-            echo "Contents of deployment directory:"
-            ls -la ~/deployments/url-shortener/
-            cd ~/deployments/url-shortener
-            echo "Checking for gradlew in deployment directory:"
-            ls -la
-            if [ -f ./gradlew ]; then
-                chmod +x ./gradlew
-                ./gradlew bootRun
-            else
-                echo "Error: gradlew not found in deployment directory."
-                exit 0
-            fi
+      # Настройка SSH для деплоя
+    deploy:
+      runs-on: ubuntu-latest
+      needs: build-and-test
+      steps:
+        - name: Checkout repository
+          uses: actions/checkout@v3
+
+        - name: Deploy to remote server
+          uses: appleboy/ssh-action@v0.1.7
+          with:
+            host: ${{ secrets.SSH_HOST }}
+            username: ${{ secrets.SSH_USERNAME }}
+            password: ${{ secrets.SSH_PASSWORD }}
+            script: |
+              echo "Starting deployment..."
+              mkdir -p ~/deployments/url-shortener
+              rm -rf ~/deployments/url-shortener/*
+              rsync -av --exclude="deployments" /github/workspace/ ~/deployments/url-shortener/
+              echo "Contents of deployment directory:"
+              ls -la ~/deployments/url-shortener/
+              cd ~/deployments/url-shortener
+              echo "Checking for gradlew in deployment directory:"
+              ls -la
+              if [ -f ./gradlew ]; then
+                  chmod +x ./gradlew
+                  ./gradlew bootRun
+              else
+                  echo "Error: gradlew not found in deployment directory."
+                  exit 1
+              fi
