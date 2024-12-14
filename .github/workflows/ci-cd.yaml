@@ -69,8 +69,8 @@ jobs:
             # Удаляем содержимое целевой папки
             rm -rf ~/deployments/url-shortener/*
             
-            # Копируем все файлы, кроме самой папки deployments
-            cp -r $(ls -A) ~/deployments/url-shortener/
+            # Копируем все файлы, кроме папки deployments
+            rsync -av --exclude="deployments" ./ ~/deployments/url-shortener/
             
             # Диагностика: отображаем файлы в папке деплоя
             echo "Contents of deployment directory:"
