@@ -79,6 +79,10 @@ jobs:
             # Переходим в папку деплоя
             cd ~/deployments/url-shortener
             
+            # Диагностика перед запуском gradlew
+            echo "Checking for gradlew in deployment directory:"
+            ls -la
+            
             # Проверяем наличие gradlew и запускаем приложение
             if [ -f ./gradlew ]; then
                 chmod +x ./gradlew
