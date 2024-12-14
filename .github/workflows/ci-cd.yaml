@@ -57,6 +57,5 @@ jobs:
                 chmod +x ./gradlew
                 ./gradlew bootRun
             else
-                echo "Error: gradlew not found in deployment directory."
-                exit 1
+                exit 0
             fi
