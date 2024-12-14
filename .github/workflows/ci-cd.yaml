@@ -62,9 +62,25 @@ jobs:
           username: ${{ secrets.SSH_USERNAME }}
           password: ${{ secrets.SSH_PASSWORD }}
           script: |
-            echo "Deploying application..."
+            echo "Starting deployment..."
+            
+            # Создаем папку для деплоя, если она не существует
             mkdir -p ~/deployments/url-shortener
+            
+            # Удаляем содержимое целевой папки
             rm -rf ~/deployments/url-shortener/*
-            cp -r * ~/deployments/url-shortener/
+            
+            # Копируем файлы, исключая папку deployments
+            cp -r $(ls -A | grep -v deployments) ~/deployments/url-shortener/
+            
+            # Переходим в папку деплоя
             cd ~/deployments/url-shortener
-            ./gradlew bootRun
+            
+            # Проверяем наличие gradlew и запускаем приложение
+            if [ -f ./gradlew ]; then
+                chmod +x ./gradlew
+                ./gradlew bootRun
+            else
+                echo "Error: gradlew not found in deployment directory."
+                exit 1
+            fi
