@@ -54,40 +54,40 @@ jobs:
       - name: Checkout source code
         uses: actions/checkout@v3
 
-    - name: Deploy to remote server
-      uses: appleboy/ssh-action@v0.1.7
-      with:
-        host: ${{ secrets.SSH_HOST }}
-        username: ${{ secrets.SSH_USERNAME }}
-        password: ${{ secrets.SSH_PASSWORD }}
-        script: |
-          echo "Starting deployment..."
-          
-          # Создаем папку для деплоя, если она не существует
-          mkdir -p ~/deployments/url-shortener
-          
-          # Удаляем содержимое целевой папки
-          rm -rf ~/deployments/url-shortener/*
-          
-          # Копируем все файлы из репозитория, исключая папку deployments
-          rsync -av --exclude="deployments" /github/workspace/ ~/deployments/url-shortener/
-          
-          # Диагностика: отображаем файлы в папке деплоя
-          echo "Contents of deployment directory:"
-          ls -la ~/deployments/url-shortener/
-          
-          # Переходим в папку деплоя
-          cd ~/deployments/url-shortener
-          
-          # Диагностика перед запуском gradlew
-          echo "Checking for gradlew in deployment directory:"
-          ls -la
-          
-          # Проверяем наличие gradlew и запускаем приложение
-          if [ -f ./gradlew ]; then
-              chmod +x ./gradlew
-              ./gradlew bootRun
-          else
-              echo "Error: gradlew not found in deployment directory."
-              exit 1
-          fi
+      - name: Deploy to remote server
+        uses: appleboy/ssh-action@v0.1.7
+        with:
+          host: ${{ secrets.SSH_HOST }}
+          username: ${{ secrets.SSH_USERNAME }}
+          password: ${{ secrets.SSH_PASSWORD }}
+          script: |
+            echo "Starting deployment..."
+            
+            # Создаем папку для деплоя, если она не существует
+            mkdir -p ~/deployments/url-shortener
+            
+            # Удаляем содержимое целевой папки
+            rm -rf ~/deployments/url-shortener/*
+            
+            # Копируем все файлы из репозитория, исключая папку deployments
+            rsync -av --exclude="deployments" /github/workspace/ ~/deployments/url-shortener/
+            
+            # Диагностика: отображаем файлы в папке деплоя
+            echo "Contents of deployment directory:"
+            ls -la ~/deployments/url-shortener/
+            
+            # Переходим в папку деплоя
+            cd ~/deployments/url-shortener
+            
+            # Диагностика перед запуском gradlew
+            echo "Checking for gradlew in deployment directory:"
+            ls -la
+            
+            # Проверяем наличие gradlew и запускаем приложение
+            if [ -f ./gradlew ]; then
+                chmod +x ./gradlew
+                ./gradlew bootRun
+            else
+                echo "Error: gradlew not found in deployment directory."
+                exit 1
+            fi
