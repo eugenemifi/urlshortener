@@ -54,7 +54,6 @@ jobs:
       - name: Checkout source code
         uses: actions/checkout@v3
 
-      # Настройка SSH для деплоя
       - name: Deploy to remote server
         uses: appleboy/ssh-action@v0.1.7
         with:
@@ -70,8 +69,8 @@ jobs:
             # Удаляем содержимое целевой папки
             rm -rf ~/deployments/url-shortener/*
             
-            # Копируем все файлы в папку деплоя
-            cp -r . ~/deployments/url-shortener/
+            # Копируем все файлы, кроме самой папки deployments
+            cp -r $(ls -A) ~/deployments/url-shortener/
             
             # Диагностика: отображаем файлы в папке деплоя
             echo "Contents of deployment directory:"
