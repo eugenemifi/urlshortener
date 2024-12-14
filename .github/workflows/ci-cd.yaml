@@ -63,31 +63,31 @@ jobs:
           script: |
             echo "Starting deployment..."
             
-            # Создаем папку для деплоя, если она не существует
-            mkdir -p ~/deployments/url-shortener
-            
-            # Удаляем содержимое целевой папки
-            rm -rf ~/deployments/url-shortener/*
-            
-            # Копируем все файлы, кроме папки deployments
-            rsync -av --exclude="deployments" ./ ~/deployments/url-shortener/
-            
-            # Диагностика: отображаем файлы в папке деплоя
-            echo "Contents of deployment directory:"
-            ls -la ~/deployments/url-shortener/
-            
-            # Переходим в папку деплоя
-            cd ~/deployments/url-shortener
-            
-            # Диагностика перед запуском gradlew
-            echo "Checking for gradlew in deployment directory:"
-            ls -la
-            
-            # Проверяем наличие gradlew и запускаем приложение
-            if [ -f ./gradlew ]; then
-                chmod +x ./gradlew
-                ./gradlew bootRun
-            else
-                echo "Error: gradlew not found in deployment directory."
-                exit 1
-            fi
+#            # Создаем папку для деплоя, если она не существует
+#            mkdir -p ~/deployments/url-shortener
+#
+#            # Удаляем содержимое целевой папки
+#            rm -rf ~/deployments/url-shortener/*
+#
+#            # Копируем все файлы, кроме папки deployments
+#            rsync -av --exclude="deployments" ./ ~/deployments/url-shortener/
+#
+#            # Диагностика: отображаем файлы в папке деплоя
+#            echo "Contents of deployment directory:"
+#            ls -la ~/deployments/url-shortener/
+#
+#            # Переходим в папку деплоя
+#            cd ~/deployments/url-shortener
+#
+#            # Диагностика перед запуском gradlew
+#            echo "Checking for gradlew in deployment directory:"
+#            ls -la
+#
+#            # Проверяем наличие gradlew и запускаем приложение
+#            if [ -f ./gradlew ]; then
+#                chmod +x ./gradlew
+#                ./gradlew bootRun
+#            else
+#                echo "Error: gradlew not found in deployment directory."
+#                exit 1
+#            fi
