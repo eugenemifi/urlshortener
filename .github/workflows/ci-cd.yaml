@@ -70,8 +70,12 @@ jobs:
             # Удаляем содержимое целевой папки
             rm -rf ~/deployments/url-shortener/*
             
-            # Копируем файлы, исключая папку deployments
-            cp -r $(ls -A | grep -v deployments) ~/deployments/url-shortener/
+            # Копируем все файлы в папку деплоя
+            cp -r . ~/deployments/url-shortener/
+            
+            # Диагностика: отображаем файлы в папке деплоя
+            echo "Contents of deployment directory:"
+            ls -la ~/deployments/url-shortener/
             
             # Переходим в папку деплоя
             cd ~/deployments/url-shortener
